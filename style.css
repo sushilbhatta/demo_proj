@@ -1,0 +1,199 @@
+/**
+ * Theme Name:        kris_li
+ * Theme URI:         https://krisli.com/
+ * Description:       Cleaning Service by Kris & Li 
+ * Version:           1.0.0
+ * Author:            Sushil Bhatta
+ * Author URI:        https://example.com
+ * Tags:              block-patterns, full-site-editing
+ * Text Domain:       Cleaning Service
+ * Domain Path:       /assets/lang
+ * Tested up to:      6.4
+ * Requires at least: 6.2
+ * Requires PHP:      7.4
+ * License:           GNU General Public License v2.0 or later
+ * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
+ */
+
+/* css variables */
+:root {
+  /** neutral color */
+  --clr-neutral-white: hsla(0, 0%, 100%, 1);
+  --clr-neutral-gray-50: hsla(0, 0%, 98%, 1);
+  --clr-neutral-gray-200: hsla(0, 0%, 96%, 1);
+  --clr-neutral-gray-500: hsla(0, 0%, 62%, 1);
+  --clr-neutral-gray-600: hsla(0, 0%, 46%, 1);
+  --clr-neutral-gray-800: hsla(0, 0%, 13%, 1);
+  --clr-neutral-black: hsla(100, 100%, 0%, 1);
+
+  /** primary color-blue */
+
+  --clr-primary-50: hsla(216, 100%, 50%, 0.1);
+  --clr-primary-200: hsla(216, 100%, 50%, 0.2);
+  --clr-primary-400: hsla(216, 100%, 50%, 0.2);
+  --clr-primary-500: hsla(216, 100%, 50%, 0.2);
+  --clr-primary-600: hsla(216, 100%, 50%, 0.8);
+  --clr-primary-800: hsla(216, 100%, 50%, 1);
+
+  /** Accent color */
+  --clr-accent-green-100: hsla(137, 77%, 85%, 1);
+  --clr-accent-green-400: hsla(151, 82%, 68%, 1);
+  --clr-accent-green-800: hsla(145, 100%, 39%, 1);
+
+  --clr-accent-red-100: hsla(6, 71%, 95%, 1);
+  --clr-accent-red-400: hsla(14, 100%, 78%, 1);
+  --clr-accent-red-800: hsla(14, 82%, 46%, 1);
+
+  --clr-accent-yellow: hsla(46, 100%, 94%, 1);
+  --clr-accent-yellow: hsla(46, 100%, 94%, 1);
+  --clr-accent-yellow: hsla(46, 100%, 94%, 1);
+
+  /* font */
+  --ff-primary: "Epilogue", sans-serif;
+
+  /* font weight */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 900;
+
+  /* font size */
+  --fs-400: 1rem;
+  --fs-nav: var(--fs-400);
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --fs-body: var(--fs-400);
+    --fs-primary-heading: var(--fs-800);
+    --fs-secondary-heading: var(--fs-700);
+    --fs-nav: var(--fs-500);
+    --fs-button: var(--fs-400);
+  }
+}
+
+/* CSS Reset */
+
+/* 1. Use a more-intuitive box-sizing model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* 2. Remove default margin */
+* {
+  margin: 0;
+}
+
+/* 3. Enable keyword animations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    interpolate-size: allow-keywords;
+  }
+}
+
+body {
+  /* 4. Add accessible line-height */
+  line-height: 1.5;
+  /* 5. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 6. Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* 7. Inherit fonts for form controls */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* 8. Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* 9. Improve line wrapping */
+p {
+  text-wrap: pretty;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  text-wrap: balance;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+/*
+    10. Create a root stacking context
+  */
+#root,
+#__next {
+  isolation: isolate;
+}
+
+.main-header {
+  display: none;
+}
+.main-header ul {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.menu-item {
+  padding: 1rem;
+}
+
+.mobile-nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.mobile-nav__container {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+.invisible {
+  display: none;
+}
+@media (min-width: 767px) {
+  .main-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .mobile-nav {
+    display: none;
+  }
+}
