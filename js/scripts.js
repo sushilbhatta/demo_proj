@@ -1,2 +1,15 @@
-const desktopNav = document.getElementsByClassName("main-header");
-const mobileNav = document.getElementsByClassName("mobile-nav__container");
+const backdrop = document.querySelector(".backdrop");
+const toggleButton = document.querySelector(".toggle-button");
+const mobileNav = document.querySelector(".mobile-nav__container");
+
+console.log(backdrop, toggleButton, mobileNav);
+
+backdrop.addEventListener("click", function () {
+  backdrop.classList.remove("open");
+  mobileNav.classList.remove("open");
+});
+
+toggleButton.addEventListener("click", function () {
+  backdrop.classList.add("open");
+  mobileNav.classList.add("open");
+});
