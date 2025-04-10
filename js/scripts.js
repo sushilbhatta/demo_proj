@@ -10,6 +10,6 @@ backdrop.addEventListener("click", function () {
 });
 
 toggleButton.addEventListener("click", function () {
-  backdrop.classList.add("open");
-  mobileNav.classList.add("open");
+  backdrop.classList.toggle("open");
+  mobileNav.classList.toggle("open");
 });

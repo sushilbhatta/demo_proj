@@ -186,14 +186,53 @@ ul {
   gap: 1.5rem;
   align-items: center;
 }
+#menu-item-61 {
+  position: relative;
+  display: inline-block;
+}
 
-.main-header .page_item a,
+#menu-item-61::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.8333 5.66602L8.16667 10.3327L3.5 5.66602' stroke='white' stroke-linecap='square'/%3E%3C/svg%3E%0A");
+  display: block;
+  height: 1rem;
+  width: 1rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.main-header ul li a,
 .mobile-nav__container {
   font-size: var(--fs-400);
   line-height: 1.5rem;
   padding: 1rem 0.75rem;
   font-weight: var(--fw-medium);
   color: var(--clr-neutral-white);
+}
+
+#menu-item-64 {
+  border: 1px solid transparent;
+  border-radius: 40px;
+  background-color: var(--clr-primary-800);
+  padding: 10px 24px;
+  height: 2.5rem;
+}
+#menu-item-73 {
+  border: 1px solid transparent;
+  border-radius: 40px;
+  background-color: var(--clr-primary-800);
+  padding: 10px 24px;
+  height: 2.5rem;
+  width: 20%;
+}
+#menu-item-64 a,
+#menu-item-73 a {
+  width: 100%;
+  padding: 0;
 }
 
 .toggle-button {
@@ -252,14 +291,15 @@ ul {
 .mobile-nav__container.open {
   transform: translateX(0);
 }
-@media (min-width: 767px) {
+@media (min-width: 1024px) {
   .main-header {
     width: 100%;
     display: flex;
     justify-content: space-between;
   }
 
-  .mobile-nav {
+  .mobile-nav,
+  .backdrop {
     display: none;
   }
 }

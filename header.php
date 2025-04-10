@@ -35,7 +35,9 @@
         <?php $logoimg=get_header_image();  ?>
         <img src="<?php echo $logoimg ?>" alt="this is logo">
     </a>
-    <button href="" class="toggle-button"></button>
+    
+    <button class="toggle-button"></button>
+
     <nav class="mobile-nav__container">
         <?php 
                 wp_nav_menu( [
