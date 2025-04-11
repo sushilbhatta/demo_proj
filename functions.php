@@ -27,4 +27,53 @@
 			'top-menu' => esc_html__('Top Menu Location', 'kris_li'),
 			'mobile-menu' => esc_html__('Mobile Menu Location', 'kris_li')
 		] );
+
+	
+
+
+	function sk_add_custom_box() {
+		$screens = [ 'post', 'page', 'wporg_cpt' ];
+		foreach ( $screens as $screen ) {
+			add_meta_box(
+				'wporg_box_id',                 // Unique ID
+				'Custom Meta Box Title',      // Box title
+				'sk_custom_box_html',  // Content callback, must be of type callable
+				$screen                            // Post type
+			);
+		}
+	}
+	add_action( 'add_meta_boxes', 'sk_add_custom_box' );
+
+
+	function sk_custom_box_html( $post ) {
+		$value = get_post_meta( $post->ID, '_hide_page_title', true );
+
+		echo $value;
+	?>
+	<label for="sk-field">Description for this field</label>
+	<select name="sk_hide_title_field" id="sk-field" class="postbox">
+	<option value=""><?php esc_html_e( 'Select', 'kris_li' ); ?></option>
+        <option value="yes" <?php selected( $value, 'yes' ); ?>>
+            <?php esc_html_e( 'Yes', 'kris_li' ); ?>
+        </option>
+        <option value="no" <?php selected( $value, 'no' ); ?>>
+            <?php esc_html_e( 'No', 'kris_li' ); ?>
+        </option>
+		</select>
+	<?php
+	}
+
+	function save_post_meta_data( $post_id ) {
+
+		 // Security check
+		if ( array_key_exists( 'sk_hide_title_field', $_POST ) ) {
+			update_post_meta(
+				$post_id,
+				'_hide_page_title',
+				$_POST['sk_hide_title_field']
+			);
+		}
+	}
+	add_action( 'save_post', 'save_post_meta_data' );
+	
 ?>
