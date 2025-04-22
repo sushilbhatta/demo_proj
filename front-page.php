@@ -1,13 +1,14 @@
 <?php get_header(); ?>
 <?php
+?>
+<main class="container">
+    <?php get_template_part('/includes/hero'); ?>
+    <?php get_template_part('/includes/carousel'); ?>
+    <?php get_template_part('/includes/feature'); ?>
+    <?php get_template_part('/includes/offer'); ?>
+    <?php get_template_part('/includes/contact'); ?>
+    <?php get_template_part('/includes/testimonial'); ?>
 
-    $hide_title = get_post_meta( get_the_ID(), '_hide_page_title', true );
-    if ( $hide_title !== 'yes' ) {
-        the_title( '<h1>', '</h1>' );
-    }
-    ?>
-    <main class="container">    
-            <?php get_template_part( '/includes/section', 'hero' ); ?>
-    </main>
+</main>
+
 <?php get_footer(); ?>
-    

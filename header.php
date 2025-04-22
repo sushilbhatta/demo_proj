@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,37 +13,42 @@
 
     <?php wp_head(); ?>
 </head>
+
 <body>
-<!-- backdrop -->
- <div class="backdrop"></div>
-<!-- desktop nav -->
-<header class="main-header">
+    <!-- backdrop -->
+    <div class="backdrop"></div>
+    <!-- desktop nav -->
+    <header class="main-header">
         <a href="#" class="main-header__brand">
-            <?php $logoimg=get_header_image();  ?>
+            <?php $logoimg = get_header_image();  ?>
             <img src="<?php echo $logoimg ?>" alt="this is logo">
         </a>
-        <?php 
-            wp_nav_menu( [
-                'theme_location' => 'top-menu'
-            ] );
+        <?php
+        wp_nav_menu([
+            'theme_location' => 'top-menu',
+            'menu_class' => 'top-menu',
+            'container' => '',
+        ]);
         ?>
-     
-</header>
 
-<!-- mobile nav -->
- <header class="mobile-nav">
-    <a href="#" class="mobile-nav__logo">
-        <?php $logoimg=get_header_image();  ?>
-        <img src="<?php echo $logoimg ?>" alt="this is logo">
-    </a>
-    
-    <button class="toggle-button"></button>
+    </header>
 
-    <nav class="mobile-nav__container">
-        <?php 
-                wp_nav_menu( [
-                    'theme_location' => 'mobile-menu'
-                ] );
+    <!-- mobile nav -->
+    <header class="mobile-nav">
+        <a href="#" class="mobile-nav__logo">
+            <?php $logoimg = get_header_image();  ?>
+            <img src="<?php echo $logoimg ?>" alt="this is logo">
+        </a>
+
+        <button class="toggle-button"></button>
+
+        <nav class="mobile-nav__container">
+            <?php
+            wp_nav_menu([
+                'theme_location' => 'mobile-menu',
+                'menu_class' => 'mobile-menu',
+                'container' => '',
+            ]);
             ?>
-    </nav>
- </header>
+        </nav>
+    </header>
