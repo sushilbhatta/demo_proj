@@ -1,8 +1,10 @@
-<?php get_header(); ?>
+<?php
+/*
+ * Template Name: About Us
+ */
+get_header('about');
+?>
 
-<div class="container">
-    <h1>
-        <?php the_title(); ?>
-    </h1>
-</div>
+
 <?php get_footer(); ?>
+

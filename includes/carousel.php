@@ -1,11 +1,6 @@
 
-<?php 
-    $feature_block = get_blocks_by_name_with_class('core/group', 'carousel');
+<?php
 
-    if (!empty($feature_block)) {
 
-        foreach ($feature_block as $block) {
-            echo apply_filters('the_content', render_block($block));
-        }
-    }
+get_template_part('template-parts/carousel/carousel-section');
 ?>

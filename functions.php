@@ -8,15 +8,28 @@ add_theme_support('custom-header');
 add_theme_support('custom-background');
 add_theme_support('post-formats', array('gallary'));
 
+// svg Support 
+function enable_svg_upload($mimes)
+{
+	$mimes['svg'] = 'image/svg+xml';
+	return $mimes;
+}
+add_filter('upload_mimes', 'enable_svg_upload');
+
+// Style
 function kris_li_enqueue_styles()
 {
 	wp_register_style('main-css', get_template_directory_uri() . '/style.css', [], time(), 'all');
+	wp_register_style('shared-css', get_template_directory_uri() . '/css/shared.css', [], time(), 'all');
+	wp_register_style('home-css', get_template_directory_uri() . '/css/home.css', [], time(), 'all');
 	wp_enqueue_style('main-css');
+	wp_enqueue_style('shared-css');
+	wp_enqueue_style('home-css');
 }
 
 add_action('wp_enqueue_scripts', 'kris_li_enqueue_styles');
 
-//  load js
+//  Javascript
 function kris_li_enqueue_scripts()
 {
 	wp_register_script('main-js', get_template_directory_uri() . '/js/scripts.js', [], time(), true);
@@ -24,6 +37,12 @@ function kris_li_enqueue_scripts()
 }
 
 add_action('wp_enqueue_scripts', 'kris_li_enqueue_scripts');
+
+// Images
+wp_enqueue_script('my-theme-js', get_template_directory_uri() . '/js/main.js', [], null, true);
+wp_localize_script('my-theme-js', 'myTheme', [
+	'themeUrl' => get_template_directory_uri(),
+]);
 
 // Menus
 register_nav_menus([
@@ -37,6 +56,7 @@ register_nav_menus([
 ]);
 
 
+// dropdown menu 
 function add_dropdown_toggles_to_menu($item_output, $item, $depth, $args)
 {
 	if (in_array('menu-item-has-children', $item->classes)) {
@@ -48,7 +68,7 @@ function add_dropdown_toggles_to_menu($item_output, $item, $depth, $args)
 add_filter('walker_nav_menu_start_el', 'add_dropdown_toggles_to_menu', 10, 4);
 
 
-
+//  get block from backend
 function get_blocks_by_name_with_class($block_name, $class_name, $blocks = null)
 {
 	global $post;
@@ -79,7 +99,6 @@ function get_blocks_by_name_with_class($block_name, $class_name, $blocks = null)
 
 	return $matched_blocks;
 }
-
 
 
 // hero section metaboxes
@@ -164,11 +183,8 @@ function hero_section_meta_box_callback($post)
 			});
 		});
 	</script>
-	<?php
+<?php
 }
-
-
-
 
 function save_hero_section_meta_box($post_id)
 {
@@ -190,31 +206,144 @@ function save_hero_section_meta_box($post_id)
 	// update_post_meta($post_id, '_hero_container_color', array_map('sanitize_text_field', $_POST['hero_img_container_color'] ?? []));
 }
 
-
 add_action('save_post', 'save_hero_section_meta_box');
 
 
+// #######################33######33
+// ###############  Testimonial heading
+function brand_carousel_section_meta_box()
+{
+	add_meta_box(
+		'brand_carousel_section_meta',
+		'Brand_carousel Section',
+		'brand_carousel_section_meta_box_callback',
+		['post', 'page'],
+		'side',
+		'high'
+	);
+}
+add_action('add_meta_boxes', 'brand_carousel_section_meta_box');
+
+function brand_carousel_section_meta_box_callback($post)
+{
+	$brand_carousel_main_heading = get_post_meta($post->ID, '_brand_carousel_main_heading', true);
+	$brand_carousel_main_paragraph = get_post_meta($post->ID, '_brand_carousel_main_paragraph', true);
+
+	wp_nonce_field('feature_section_nonce_action', 'feature_section_nonce');
+?>
+	<div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+		<h4>Brand_carousel Heading</h4>
+		<p><label>Heading:</label><br>
+			<input type="text" name="brand_carousel_main_heading" value="<?php echo esc_attr($brand_carousel_main_heading); ?>" style="width:100%;">
+		</p>
+		<p><label>Paragraph:</label><br>
+			<textarea name="brand_carousel_main_paragraph" rows="4" style="width:100%;"><?php echo esc_textarea($brand_carousel_main_paragraph); ?></textarea>
+		</p>
+	</div>
+	<?php
+}
+
+function save_brand_carousel_section_meta_box($post_id)
+{
+	if (
+		!isset($_POST['feature_section_nonce']) ||
+		!wp_verify_nonce($_POST['feature_section_nonce'], 'feature_section_nonce_action')
+	) return;
+
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+	if (!current_user_can('edit_post', $post_id)) return;
+
+	update_post_meta($post_id, '_brand_carousel_main_heading', sanitize_text_field($_POST['brand_carousel_main_heading'] ?? ''));
+	update_post_meta($post_id, '_brand_carousel_main_paragraph', sanitize_textarea_field($_POST['brand_carousel_main_paragraph'] ?? ''));
+}
+add_action('save_post', 'save_brand_carousel_section_meta_box');
+
+
+// Offer Content  meta_box
+
+function carousel_meta_box()
+{
+	add_meta_box(
+		'carousel_meta',              // ID
+		'Carousel Section',                   // Title
+		'carousel_meta_box_callback', // Callback
+		['post', 'page'],                    // Screen(s)
+		'side',                            // Context
+		'high'                               // Priority
+	);
+}
+add_action('add_meta_boxes', 'carousel_meta_box');
+
+function carousel_meta_box_callback($post)
+{
+	wp_nonce_field('carousel_nonce_action', 'carousel_nonce');
+
+	$carousel_icon     = get_post_meta($post->ID, '_carousel_icon', true) ?: [];
+
+
+
+	for ($i = 0; $i < 6; $i++) {
+	?>
+		<div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+			<h4>Carousels <?php echo $i + 1; ?></h4>
+			<p>
+				<label>Add Logo URL:</label><br>
+				<input type="text" name="carousel_image[]" id="carousel_image_<?php echo $i; ?>" value="<?php echo esc_attr($carousel_icon[$i] ?? ''); ?>" style="width:80%;">
+				<button class="button upload-icon" data-target="carousel_image_<?php echo $i; ?>">Upload</button>
+			</p>
+		</div>
+	<?php
+	}
+
+	?>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			document.querySelectorAll('.upload-icon').forEach(button => {
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+					const inputId = this.dataset.target;
+					const input = document.getElementById(inputId);
+					const uploader = wp.media({
+						title: 'Select Image',
+						button: {
+							text: 'Use this image'
+						},
+						multiple: false
+					}).on('select', function() {
+						const attachment = uploader.state().get('selection').first().toJSON();
+						input.value = attachment.url;
+					}).open();
+				});
+			});
+		});
+	</script>
+	<?php
+}
 
 
 
 
+function save_carousel_meta_box($post_id)
+{
+	if (
+		!isset($_POST['carousel_nonce']) ||
+		!wp_verify_nonce($_POST['carousel_nonce'], 'carousel_nonce_action')
+	) return;
+
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+	if (!current_user_can('edit_post', $post_id)) return;
+
+	update_post_meta($post_id, '_carousel_icon', array_map('esc_url_raw', $_POST['carousel_image'] ?? []));
+}
+add_action('save_post', 'save_carousel_meta_box');
+
+
+// ##########
+//##########################################
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//! feature section metaboxes
+// feature section metaboxes
 
 function feature_section_meta_box()
 {
@@ -322,8 +451,6 @@ function feature_section_meta_box_callback($post)
 }
 
 
-
-
 function save_feature_section_meta_box($post_id)
 {
 	if (
@@ -343,11 +470,11 @@ function save_feature_section_meta_box($post_id)
 	update_post_meta($post_id, '_feature_img_orintation', array_map('sanitize_text_field', $_POST['feature_img_orintation'] ?? []));
 	update_post_meta($post_id, '_feature_container_color', array_map('sanitize_text_field', $_POST['feature_img_container_color'] ?? []));
 }
-
-
 add_action('save_post', 'save_feature_section_meta_box');
 
 
+
+// Offer Section  Heading Meta box
 function offer_section_meta_box()
 {
 	add_meta_box(
@@ -395,10 +522,8 @@ function save_offer_section_meta_box($post_id)
 }
 add_action('save_post', 'save_offer_section_meta_box');
 
-//! Offer list MetaBox
 
-
-// Register the meta_box
+// Offer Content  meta_box
 
 function offer_meta_box()
 {
@@ -500,17 +625,8 @@ function save_offer_meta_box($post_id)
 	update_post_meta($post_id, '_offer_button', array_map('sanitize_text_field', $_POST['offer_button'] ?? []));
 	update_post_meta($post_id, '_offer_button_links', array_map('esc_url_raw', $_POST['offer_button_links'] ?? []));
 }
-
-
 add_action('save_post', 'save_offer_meta_box');
 
-// svg Support 
-function enable_svg_upload($mimes)
-{
-	$mimes['svg'] = 'image/svg+xml';
-	return $mimes;
-}
-add_filter('upload_mimes', 'enable_svg_upload');
 
 
 
@@ -850,5 +966,117 @@ function save_get_in_touch_section_meta_box($post_id)
 
 
 add_action('save_post', 'save_get_in_touch_section_meta_box');
+
+
+
+
+//################################################About us Section##############################################
+//################################################About us Section##############################################
+//################################################About us Section##############################################
+
+
+function about_krisli_meta_box()
+{
+	add_meta_box(
+		'about_krisli_meta',              // ID
+		'Contact Section',                   // Title
+		'about_krisli_meta_box_callback', // Callback
+		['post', 'page'],                    // Screen(s)
+		'side',                            // Context
+		'high'                               // Priority
+	);
+}
+add_action('add_meta_boxes', 'about_krisli_meta_box');
+
+function about_krisli_meta_box_callback($post)
+{
+	wp_nonce_field('about_krisli_nonce_action', 'about_krisli_nonce');
+
+	$headings   = get_post_meta($post->ID, '_about_krisli_headings', true) ?: '';
+	$paragraphs = get_post_meta($post->ID, '_about_krisli_paragraphs', true) ?: '';
+	$images     = get_post_meta($post->ID, '_about_krisli_images', true) ?: '';
+	$buttons    = get_post_meta($post->ID, '_about_krisli_buttons', true) ?: '';
+	$button_links = get_post_meta($post->ID, '_about_krisli_button_links', true) ?: '';
+	$image_orintation = get_post_meta($post->ID, '_about_krisli_img_orintation', true) ?: '';
+
+?>
+	<div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+		<h4>About KrisLi Information </h4>
+
+		<p><label>Heading:</label><br>
+			<input type="text" name="about_krisli_headings" value="<?php echo esc_attr($headings ?? ''); ?>" style="width:100%;">
+		</p>
+
+		<p><label>Paragraph:</label><br>
+			<textarea name="about_krisli_paragraphs" rows="4" style="width:100%;"><?php echo esc_textarea($paragraphs ?? ''); ?></textarea>
+		</p>
+
+		<p><label>Image URL:</label><br>
+			<input type="text" name="about_krisli_images" id="about_krisli_image" value="<?php echo esc_attr($images ?? ''); ?>" style="width:80%;">
+			<button class="button upload-image" data-target="about_krisli_image">Upload</button>
+		</p>
+		<p><label>Button Label:</label><br>
+			<input type="text" name="about_krisli_buttons" value="<?php echo esc_attr($buttons ?? ''); ?>" style="width:100%;">
+		</p>
+
+		<p><label>Button Link:</label><br>
+			<input type="text" name="about_krisli_button_links" value="<?php echo esc_attr($button_links ?? ''); ?>" style="width:100%;">
+		</p>
+
+		<p>
+			<label>Image Orintation</label><br>
+			<select name="about_krisli_img_orintation" id="about_krisli_img_orintation">
+				<option value="normal" <?php selected($image_orintation, 'top'); ?>>Top</option>
+				<option value="right" <?php selected($image_orintation, 'right'); ?>>Right</option>
+				<option value="bottom" <?php selected($image_orintation, 'bottom'); ?>>Bottom</option>
+				<option value="left" <?php selected($image_orintation, 'left'); ?>>Left</option>
+			</select>
+
+		</p>
+	</div>
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			document.querySelectorAll('.upload-image').forEach(button => {
+				button.addEventListener('click', function(e) {
+					e.preventDefault();
+					const inputId = this.dataset.target;
+					const input = document.getElementById(inputId);
+					const uploader = wp.media({
+						title: 'Select Image',
+						button: {
+							text: 'Use this image'
+						},
+						multiple: false
+					}).on('select', function() {
+						const attachment = uploader.state().get('selection').first().toJSON();
+						input.value = attachment.url;
+					}).open();
+				});
+			});
+		});
+	</script>
+<?php
+}
+
+function save_about_krisli_meta_box($post_id)
+{
+	if (
+		!isset($_POST['about_krisli_nonce']) ||
+		!wp_verify_nonce($_POST['about_krisli_nonce'], 'about_krisli_nonce_action')
+	) return;
+
+	if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+	if (!current_user_can('edit_post', $post_id)) return;
+
+	update_post_meta($post_id, '_about_krisli_headings', sanitize_text_field($_POST['about_krisli_headings']));
+	update_post_meta($post_id, '_about_krisli_paragraphs', sanitize_textarea_field($_POST['about_krisli_paragraphs']));
+	update_post_meta($post_id, '_about_krisli_images', esc_url_raw($_POST['about_krisli_images']));
+	update_post_meta($post_id, '_about_krisli_buttons', sanitize_text_field($_POST['about_krisli_buttons']));
+	update_post_meta($post_id, '_about_krisli_button_links', esc_url_raw($_POST['about_krisli_button_links']));
+	update_post_meta($post_id, '_about_krisli_img_orintation', sanitize_text_field($_POST['about_krisli_img_orintation']));
+}
+
+add_action('save_post', 'save_about_krisli_meta_box');
+
 
 ?>

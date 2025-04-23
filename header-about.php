@@ -18,7 +18,7 @@
     <!-- backdrop -->
     <div class="backdrop"></div>
     <!-- desktop nav -->
-    <header class="main-header">
+    <header class="main-header main-nav--style">
         <a href="#" class="main-header__brand">
             <?php $logoimg = get_header_image();  ?>
             <img src="<?php echo $logoimg ?>" alt="this is logo">
@@ -32,14 +32,15 @@
         ?>
 
     </header>
+
     <!-- mobile nav -->
     <header class="mobile-nav">
         <a href="#" class="mobile-nav__logo">
-            <?php $logoimg = get_header_image(); ?>
+            <?php $logoimg = get_header_image();  ?>
             <img src="<?php echo $logoimg ?>" alt="this is logo">
         </a>
 
-        <button class="toggle-button"></button>
+        <button class="toggle-btn--white"></button>
 
         <nav class="mobile-nav__container">
             <?php
